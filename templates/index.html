@@ -1,86 +1,190 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!doctype html>
+<html lang="ja" >
+  <head>
+    <title>尿細管AI</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css')}}">
-    <!------ Include the above in your HEAD tag ---------->
-    <title>尿細管AI</title>
-</head>
-<header>
-    <h1 class="alert alert-primary " role="alert">尿細管AI</h1>
-</header>
-<body>
-    {% if result %}
-    <IMG SRC="{{ filepath }}" BORDER="1"> 尿細管の高さは {{result}} です<BR>
-    <IMG SRC="{{ contour_img_path }}" BORDER="1"> threshold={{sure_fig_p}}の時の輪郭をなぞった画像です。<BR>
-    <HR>
-    {% endif %}
-    ファイルを選択して送信してください<BR>
-    <form action = "./" method = "POST" 
-        enctype = "multipart/form-data">
-        <input type = "file" name = "file" />
-        <!-- <input type="number" name="threshold" step="0.1" value="0.3"> -->
-        <input type="range" value="0.3" min="0.01" max="1" step="0.01" oninput="document.getElementById('output1').value=this.value" name="threshold">
-        <output id="output1">0.3</output>
-        <input type = "submit"/>
-    </form>
-</body>
-<footer>
-<div class="container">
-<div class="row">
-            <div class="col-md-4 col-sm-6 col-xs-12">
-            <span class="logo">LOGO</span>
-            </div>
-            
-            <div class="col-md-4 col-sm-6 col-xs-12">
-                <ul class="menu">
-                    <span>Menu</span>    
-                    <li>
-                        <a href="#">Home</a>
-                    </li>
-                        
-                    <li>
-                        <a href="#">About</a>
-                    </li>
-                        
-                    <li>
-                        <a href="#">Blog</a>
-                    </li>
-                        
-                    <li>
-                        <a href="#">Gallery</a>
-                    </li>
-                </ul>
-            </div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jumbotron.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     
-            <div class="col-md-4 col-sm-6 col-xs-12">
-            <ul class="address">
-                <span>Contact</span>       
-                <li>
-                <i class="fa fa-phone" aria-hidden="true"></i> 
-                <a href="#">Phone</a>
-                </li>
-                <li>
-                <i class="fa fa-map-marker" aria-hidden="true"></i> 
-                <a href="#">Adress</a>
-                </li> 
-                <li>
-                <i class="fa fa-envelope" aria-hidden="true"></i> 
-                <a href="#">Email</a>
-                </li> 
-            </ul>
-            </div>
-        </div> 
+  </head>
+  <body >
+    <a id="skippy" class="sr-only sr-only-focusable" href="#content">
+  <div class="container">
+    <span class="skiplink-text">Skip to main content</span>
+  </div>
+</a>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="#">Kitasato University　　Lab.Ani.</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+<main role="main">
+
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-3">尿細管AI</h1>
+      <p>腎臓の組織画像から近位尿細管を取り出し、尿細管壁の高さを計測します</p>
+      <p><a class="btn btn-primary btn-lg" href="#" role="button">詳細 &raquo;</a></p>
     </div>
-</footer>
+  </div>
+
+  <div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+      <div class="col-md-6">
+        <h2>尿細管画像アップロード</h2>
+        ファイルを選択して送信してください<BR>
+            <form action = "./height" method = "POST" 
+                enctype = "multipart/form-data">
+                <input type = "file" name = "file" />
+                <!-- <input type="number" name="threshold" step="0.1" value="0.3"> -->
+                <input type="range" value="0.3" min="0.01" max="1" step="0.01" oninput="document.getElementById('output1').value=this.value" name="threshold">
+                <output id="output1">0.3</output>
+                <input type = "submit"/>
+            </form>
+      </div>
+      
+      <div class="col-md-6">
+        <h2>注意事項</h2>
+        <h4>10×の病理組織画像を撮影してください<BR><BR>
+            256×256にリサイズしてからアップロードしてください
+        </h4>
+        <BR>
+        <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+      </div>
+    </div>
+
+    {% if result %}
+    <p class="text-light bg-dark">ディープラーニングによる計算結果</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <IMG SRC="{{ filepath }}" BORDER="1"> 
+                </div>
+                <div class="col-sm">
+                    <IMG SRC="{{ contour_img_path }}" BORDER="1">
+                </div>
+                <div class="col-sm">
+                    <h3>出力結果...</h3>
+                    <BR>
+                    <h4>
+                        尿細管の高さは {{result}} です<BR><BR>
+                        
+                        左図はアップロード画像<BR>
+                        右図はthreshold={{sure_fig_p}}の輪郭描出画像。<BR>
+                    </h4>
+                </div>
+            </div>
+      </div>
+    
+        <HR>
+    {% endif %}
+   
+
+   
+
+    <hr>
+
+  </div> <!-- /container -->
+
+</main>
+
+<footer>
+    <div class="container">
+    <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                <span class="logo">
+                    Laboratory <BR>
+                    Animal Science <BR>
+                    and <BR>
+                    Medicine</span>
+                </div>
+                
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <ul class="menu">
+                        <span>Menu</span>    
+                        <li>
+                            <a href="#">Home</a>
+                        </li>
+                            
+                        <li>
+                            <a href="#">About</a>
+                        </li>
+                            
+                        <li>
+                            <a href="#">Blog</a>
+                        </li>
+                            
+                        <li>
+                            <a href="#">Gallery</a>
+                        </li>
+                    </ul>
+                </div>
+        
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                <ul class="address">
+                    <span>Representative：谷本杏介</span> 
+                    <span>Collaborator：嶋田修士</span>     
+                    <li>
+                    <i class="fa fa-phone" aria-hidden="true"></i> 
+                    <a href="#">Phone</a>
+                    </li>
+                    <li>
+                    <i class="fa fa-map-marker" aria-hidden="true"></i> 
+                    <a href="#">Adress</a>
+                    </li> 
+                    <li>
+                    <i class="fa fa-envelope" aria-hidden="true"></i> 
+                    <a href="#">Email</a>
+                    </li> 
+                </ul>
+                </div>
+            </div> 
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script>
+  window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')
+</script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script><script src="/docs/4.3/assets/js/vendor/anchor.min.js"></script>
+<script src="/docs/4.3/assets/js/vendor/clipboard.min.js"></script>
+<script src="/docs/4.3/assets/js/vendor/bs-custom-file-input.min.js"></script>
+<script src="/docs/4.3/assets/js/src/application.js"></script>
+<script src="/docs/4.3/assets/js/src/search.js"></script>
+<script src="/docs/4.3/assets/js/src/ie-emulation-modes-warning.js"></script>
+  </body>
 </html>
-
-
-
-
