@@ -13,6 +13,8 @@ import pytz
 from model import FromModelMeasureHight
 
 from PIL import Image
+from decimal import *
+
 
 
 
@@ -72,7 +74,8 @@ def upload_file():
         sure_fig_p = float(request.form.get('threshold'))
 
         # モデルのインポート
-        result, predict_img = FromModelMeasureHight(filepath, sure_fig_p=sure_fig_p)
+        result, predict_img, tubele_n = FromModelMeasureHight(filepath, sure_fig_p=sure_fig_p)
+        result = Decimal(str(result)).quantize(Decimal('0.0001'), rounding=ROUND_UP)
         
         contour_img_path = "./static/" + datetime.now().strftime("%Y%m%d%H%M%S") + ".png"
 
@@ -80,7 +83,7 @@ def upload_file():
 
         pil_img.save(contour_img_path)
 
-        return render_template("index.html", filepath=filepath, result=result, contour_img_path=contour_img_path, sure_fig_p=sure_fig_p)
+        return render_template("index.html", filepath=filepath, result=result, contour_img_path=contour_img_path, sure_fig_p=sure_fig_p, tubele_n=tubele_n)
 
 @app.route('/height')
 @login_required #ログインしているユーザーしかアクセスできない(ログインしている前提)

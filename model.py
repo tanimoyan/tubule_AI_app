@@ -151,8 +151,9 @@ def FromModelMeasureHight(filepath, sure_fig_p):
     r = np.sqrt((naiku_hole/len(coins)) / np.pi)#尿細管の内腔の半径
 
     result = R-r
+    n = len(coins)
 
     # print("watershedによる近位尿細管個数：{}".format(len(coins)))
     # print("尿細管壁の高さの平均：{:.4f}".format(R-r))
 
-    return result, predict_img
+    return result, predict_img, n
